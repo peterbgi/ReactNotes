@@ -61,13 +61,16 @@ const handleKeyUp = async () => {
 
 
 const mouseDown = (e) => {
-  mouseStartPos.x = e.clientX;
-  mouseStartPos.y = e.clientY;
+  if (e.target.className === "card-header")
+  {
+    mouseStartPos.x = e.clientX;
+    mouseStartPos.y = e.clientY;
 
-  document.addEventListener("mousemove", mouseMove);
-  document.addEventListener("mouseup", mouseUp);
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseup", mouseUp);
 
-  setZIndex(cardRef.current);
+    setZIndex(cardRef.current);
+  }
 };
 
 
