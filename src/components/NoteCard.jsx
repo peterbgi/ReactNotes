@@ -1,9 +1,15 @@
 import {useRef, useEffect, useState} from 'react'
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from '../util';
 import Trash from '../icons/Trash'
+import Spinner from '../icons/Spinner'
 import { db } from '../appwrite/databases';
 
 const NoteCard = ({note}) => {
+const [saving, setSaving ] = useState(false);
+const keyUpTimer = useRef(null);
+
+
+
    const [position, setPositon] = useState(JSON.parse(note.position));
     const colors = JSON.parse(note.colors);
     const body = bodyParser(note.body);
@@ -34,6 +40,21 @@ const saveData = async (key, value) => {
   } catch (error) {
     console.error(error);
   }
+
+  setSaving(false);
+};
+
+const handleKeyUp = async () => {
+  setSaving(true);
+
+  if (keyUpTimer.current) {
+    clearTimeout(keyUpTimer.current);
+  }
+
+  keyUpTimer.current = setTimeout(() => {
+    saveData("body", textAreaRef.current.value);
+}, 2000);
+
 };
 
  
@@ -88,9 +109,21 @@ useEffect(() => {
       style={{ backgroundColor: colors.colorHeader }}
       onMouseDown={mouseDown}>
             <Trash />
+
+
+            {
+               saving && (
+                <div className="card-saving">
+                  <Spinner color={colors.colorText} />
+                    <span style={{ color: colors.colorText }}>Saving...</span>
+                </div>
+            )}
+
+
         </div> 
     <div className="card-body">
       <textarea  
+      onKeyUp={handleKeyUp}
       ref={textAreaRef} 
        style={{ color: colors.colorText }}
        defaultValue={body}
