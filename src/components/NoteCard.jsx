@@ -3,12 +3,14 @@ import { setNewOffset, autoGrow, setZIndex, bodyParser } from '../util';
 import DeleteButton from './DeleteButton';
 import Spinner from '../icons/Spinner'
 import { db } from '../appwrite/databases';
+import { useContext } from 'react';
+import { NoteContext } from '../context/NoteContext';
 
-const NoteCard = ({note, setNotes}) => {
+const NoteCard = ({note}) => {
 const [saving, setSaving ] = useState(false);
 const keyUpTimer = useRef(null);
 
-
+   const {setSelectedNote} = useContext(NoteContext)
 
    const [position, setPositon] = useState(JSON.parse(note.position));
     const colors = JSON.parse(note.colors);
@@ -70,6 +72,7 @@ const mouseDown = (e) => {
     document.addEventListener("mouseup", mouseUp);
 
     setZIndex(cardRef.current);
+    setSelectedNote(note)
   }
 };
 
@@ -96,6 +99,7 @@ const mouseMove = (e) => {
 
 useEffect(() => {
   autoGrow(textAreaRef);
+  setZIndex(cardRef.current);
 }, [])
 
   return (
@@ -111,7 +115,7 @@ useEffect(() => {
       className="card-header" 
       style={{ backgroundColor: colors.colorHeader }}
       onMouseDown={mouseDown}>
-            <DeleteButton setNotes={setNotes} noteId={note.$id} />
+            <DeleteButton  noteId={note.$id} />
 
 
             {
@@ -135,6 +139,7 @@ useEffect(() => {
        }}
        onFocus={() => {
         setZIndex(cardRef.current);
+        setSelectedNote(note);
        }}
       >
 
