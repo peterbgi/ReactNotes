@@ -1,10 +1,10 @@
 import {useRef, useEffect, useState} from 'react'
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from '../util';
-import Trash from '../icons/Trash'
+import DeleteButton from './DeleteButton';
 import Spinner from '../icons/Spinner'
 import { db } from '../appwrite/databases';
 
-const NoteCard = ({note}) => {
+const NoteCard = ({note, setNotes}) => {
 const [saving, setSaving ] = useState(false);
 const keyUpTimer = useRef(null);
 
@@ -108,7 +108,7 @@ useEffect(() => {
       className="card-header" 
       style={{ backgroundColor: colors.colorHeader }}
       onMouseDown={mouseDown}>
-            <Trash />
+            <DeleteButton setNotes={setNotes} noteId={note.$id} />
 
 
             {
